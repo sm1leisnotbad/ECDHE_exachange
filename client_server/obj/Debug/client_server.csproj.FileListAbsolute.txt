@@ -1,3 +1,14 @@
 D:\test\client_server\client_server\obj\Debug\client_server.csproj.AssemblyReference.cache
 D:\test\client_server\client_server\obj\Debug\client_server.csproj.SuggestedBindingRedirects.cache
 D:\test\client_server\client_server\obj\Debug\client_server.csproj.CoreCompileInputs.cache
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client_server\bin\Debug\client_server.exe.config
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client_server\bin\Debug\client_server.exe
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client_server\bin\Debug\client_server.pdb
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client_server\bin\Debug\BouncyCastle.Crypto.dll
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client_server\bin\Debug\BouncyCastle.Crypto.xml
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client_server\obj\Debug\client_server.csproj.AssemblyReference.cache
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client_server\obj\Debug\client_server.csproj.SuggestedBindingRedirects.cache
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client_server\obj\Debug\client_server.csproj.CoreCompileInputs.cache
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client_server\obj\Debug\client_server.csproj.CopyComplete
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client_server\obj\Debug\client_server.exe
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client_server\obj\Debug\client_server.pdb

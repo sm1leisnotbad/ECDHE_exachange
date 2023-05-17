@@ -8,6 +8,10 @@ using System.Net;
 using Org.BouncyCastle.Asn1.X9;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Asn1.Sec;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Math.EC;
 
 namespace client_server
 {
@@ -23,56 +27,89 @@ namespace client_server
         NetworkStream networkStream;
 
         ECDomainParameters curve;
-
+        AsymmetricCipherKeyPair ecc_keypair;
+        ECPublicKeyParameters ecc_pubkey;
+        ECPrivateKeyParameters ecc_privatekey;
 
         byte[] buffer;
+        byte[] finalKey;
         string message;
         int bytesRead;
-        int totalBytesRead;
         int messageSize;
 
-        void getCurvebyName(string name)
+        void changeCurvebyName(string name)
         {
             X9ECParameters parameter = SecNamedCurves.GetByName(name);
             curve = new ECDomainParameters(parameter);
         }
 
+        void generatingKeypair()
+        {
+            SecureRandom random = new SecureRandom();
+
+            ECKeyGenerationParameters param_for_key = new ECKeyGenerationParameters(curve, random);
+            ECKeyPairGenerator generator = new ECKeyPairGenerator();
+            generator.Init(param_for_key);
+            ecc_keypair = generator.GenerateKeyPair();
+            ecc_pubkey = (ECPublicKeyParameters)ecc_keypair.Public;
+            ecc_privatekey = (ECPrivateKeyParameters)ecc_keypair.Private;
+            Console.WriteLine("Key generation completed!!!");
+            Console.WriteLine("Public Key");
+            Console.WriteLine("X : " + ecc_pubkey.Q.XCoord.ToString());
+            Console.WriteLine("Y : " + ecc_pubkey.Q.YCoord.ToString());
+        }
+
+        void sendPublicKey()
+        {
+            buffer = ecc_pubkey.Q.GetEncoded();
+            networkStream = client.GetStream();
+            networkStream.Write(buffer, 0, buffer.Length);
+            networkStream.Flush();
+        }
+
+        void getOtherPublicKey()
+        {
+            networkStream = client.GetStream();
+            bytesRead = client.ReceiveBufferSize;
+            buffer = new byte[bytesRead];
+            ECPoint point = ecc_pubkey.Parameters.Curve.DecodePoint(buffer);
+            ECPublicKeyParameters otherPublicKey = new ECPublicKeyParameters(point, curve);
+
+            IBasicAgreement ok = AgreementUtilities.GetBasicAgreement("ECDH");
+            ok.Init(ecc_privatekey);
+            byte[] sharekey = ok.CalculateAgreement(otherPublicKey).ToByteArray();
+            finalKey = sharekey;
+            Console.WriteLine("Calculating share key completed!!!");
+            Console.Write("Share key: " + BitConverter.ToString(sharekey).Replace("-", String.Empty));
+            Console.WriteLine("");
+        }
+        /// <summary>
+        /// currently only one curve - secp256k1, will add more curve later
+        /// </summary>
+        void client_side()
+        {
+            changeCurvebyName("secp256k1");
+            generatingKeypair();
+            sendPublicKey();
+            getOtherPublicKey();
+        }
 
 
+        void server_side()
+        {
+            changeCurvebyName("secp256k1");
+            generatingKeypair();
+            getOtherPublicKey();
+            sendPublicKey();
+        }
         static void Main(string[] args)
         {
             Program program = new Program();
-            program.ConnectToServer();
-            program.ListenToClient();
+            program.client_side();
+            // program.changeCurvebyName("secp256k1");
+            // program.generatingKeypair();
+            Console.ReadKey();
         }
-
-        /** void Choose()
-        {
-            Console.WriteLine("Choose what you want to do: ");
-            Console.WriteLine("1. Send message to server");
-            Console.WriteLine("2. Receive message from server");
-            Console.WriteLine("3. Listen to client");
-            Console.WriteLine("4. Exit");
-            int choice = Convert.ToInt32(Console.ReadLine());
-            switch (choice)
-            {
-                case 1:
-                    SendMessage();
-                    break;
-                case 2:
-                    ReceiveMessage();
-                    break;
-                case 3:
-                    ListenToClient();
-                    break;
-                case 4:
-                    Environment.Exit(0);
-                    break;
-                default:
-                    Console.WriteLine("Wrong choice");
-                    break;
-            }
-        } */
 
 
         void ListenToClient()
@@ -83,7 +120,6 @@ namespace client_server
 
         void ConnectToServer()
         {
-            Console.WriteLine("Tcp ");
             client = new TcpClient();
             IPserver = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080);
             client.Connect(IPserver);
