@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
+using Org.BouncyCastle.Asn1.X9;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Asn1.Sec;
 
 namespace client_server
 {
@@ -18,22 +21,32 @@ namespace client_server
 
         IPEndPoint IPserver;
         NetworkStream networkStream;
+
+        ECDomainParameters curve;
+
+
         byte[] buffer;
         string message;
         int bytesRead;
         int totalBytesRead;
         int messageSize;
 
+        void getCurvebyName(string name)
+        {
+            X9ECParameters parameter = SecNamedCurves.GetByName(name);
+            curve = new ECDomainParameters(parameter);
+        }
+
+
+
         static void Main(string[] args)
         {
             Program program = new Program();
             program.ConnectToServer();
-            program.SendMessage();
-            program.ReceiveMessage();
             program.ListenToClient();
         }
 
-        void Choose()
+        /** void Choose()
         {
             Console.WriteLine("Choose what you want to do: ");
             Console.WriteLine("1. Send message to server");
@@ -59,7 +72,7 @@ namespace client_server
                     Console.WriteLine("Wrong choice");
                     break;
             }
-        }
+        } */
 
 
         void ListenToClient()
@@ -76,24 +89,23 @@ namespace client_server
             client.Connect(IPserver);
         }
 
-        void SendMessage()
+        void SendMessage(string message)
         {
-            message = "Hello Server";
+
             buffer = Encoding.ASCII.GetBytes(message);
             networkStream = client.GetStream();
             networkStream.Write(buffer, 0, buffer.Length);
             networkStream.Flush();
-            Console.WriteLine("Message sent to server: " + message);
         }
 
-        void ReceiveMessage()
+        string ReceiveAll()
         {
             networkStream = client.GetStream();
             messageSize = client.ReceiveBufferSize;
             buffer = new byte[messageSize];
             bytesRead = networkStream.Read(buffer, 0, messageSize);
             message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-            Console.WriteLine("Message received from server: " + message);
+            return message;
         }
 
     }
