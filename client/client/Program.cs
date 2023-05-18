@@ -158,7 +158,7 @@ namespace client_server
         }
 
         void client_side()
-        {
+        { 
 
             Console.WriteLine("##########################################");
             Console.WriteLine("#                                        #");
