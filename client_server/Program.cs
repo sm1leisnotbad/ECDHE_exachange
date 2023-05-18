@@ -12,6 +12,7 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Math.EC;
+using System.Diagnostics;
 
 namespace client_server
 {
@@ -123,9 +124,16 @@ namespace client_server
 
         void ConnectToServer()
         {
+            string servername = "";
+            Console.Write("Enter URL of host: ");
+            servername = Console.ReadLine();
+            var address = Dns.GetHostAddresses(servername);
+            Debug.Assert(address.Length > 0);
+            var enpoint = new IPEndPoint(address[0], 8080);
+
             client = new TcpClient();
-            IPserver = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080);
-            client.Connect(IPserver);
+            
+            client.Connect(enpoint);
         }
 
         void SendMessage(string message)
