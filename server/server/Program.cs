@@ -13,6 +13,7 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Math.EC;
 using System.Diagnostics;
+using Org.BouncyCastle.Crypto.Paddings;
 
 namespace client_server
 {
@@ -37,6 +38,7 @@ namespace client_server
         string message;
         int bytesRead;
         int messageSize;
+        byte[] key;
 
         void changeCurvebyName(string name)
         {
@@ -87,6 +89,7 @@ namespace client_server
             Console.WriteLine("Calculating share key completed!!!");
             Console.Write("Share key: " + BitConverter.ToString(sharekey).Replace("-", String.Empty));
             Console.WriteLine("");
+            Buffer.BlockCopy(finalKey, 0, key, 0, 16);
         } 
         /// <summary>
         /// currently only one curve - secp256k1, will add more curve later
@@ -103,15 +106,48 @@ namespace client_server
         }
         */
 
-         void server_side()
-         {
-             changeCurvebyName("secp256k1");
-             ListenToClient();
-             generatingKeypair();
+        static byte[] encrypt_msg(byte[] KEY, byte[] IV, string msg)
+        {
+            IBufferedCipher cipher = CipherUtilities.GetCipher("AES/CBC/PKCS7");
+            ParametersWithIV parameters = new ParametersWithIV(new KeyParameter(KEY), IV);
+            cipher.Init(true, parameters);
+
+            byte[] plaintext = Encoding.UTF8.GetBytes(msg);
+            return cipher.DoFinal(plaintext);
+        }
+
+        static string decrypt_msg(byte[] KEY, byte[] IV, byte[] enc)
+        {
+            IBufferedCipher cipher = CipherUtilities.GetCipher("AES/CBC/PKCS7");
+            ParametersWithIV parameters = new ParametersWithIV(new KeyParameter(KEY), IV);
+            cipher.Init(false, parameters);
+
+            byte[] decryptedBytes = cipher.DoFinal(enc);
+            return Encoding.UTF8.GetString(decryptedBytes);
+
+        }
+
+        void Decrypt_and_show(byte[] ok)
+        { 
+
+        }
+        void Encrypt_and_send(string msg)
+        {
+            byte[] iv = new byte[16];
+            SecureRandom random = new SecureRandom();
+            random.NextBytes(iv);
+
+        }
+
+        void server_side()
+        {
+            changeCurvebyName("secp256k1");
+            ListenToClient();
+            generatingKeypair();
              
-             getOtherPublicKey();
-             sendPublicKey();
-         }
+            getOtherPublicKey();
+            sendPublicKey();
+        }
 
         static void Main(string[] args)
         {
