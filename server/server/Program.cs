@@ -136,6 +136,10 @@ namespace client_server
             byte[] iv = new byte[16];
             SecureRandom random = new SecureRandom();
             random.NextBytes(iv);
+            byte[] enc = encrypt_msg(key, iv, msg);
+            byte[] ok = new byte[16 + enc.Length];
+            Buffer.BlockCopy(iv, 0, ok, 0, 16);
+            Buffer.BlockCopy(enc, 0, ok, 16, enc.Length);
 
         }
 
@@ -186,15 +190,23 @@ namespace client_server
         }
         */
 
-        void SendMessage(string message)
+        void SendStream(byte[] msg)
         {
 
-            buffer = Encoding.ASCII.GetBytes(message);
             networkStream = client.GetStream();
-            networkStream.Write(buffer, 0, buffer.Length);
+            networkStream.Write(msg, 0, msg.Length);
             networkStream.Flush();
         }
 
+        byte[] ReadStream()
+        {
+            byte[] buf = new byte[1024];
+            networkStream = client.GetStream();
+            int len = networkStream.Read(buf, 0, 1024);
+            byte[] ok = new byte[len];
+            Buffer.BlockCopy(buf, 0, ok, 0, len);
+            return buf;
+        }
         byte[] ReceiveAll()
         {
             networkStream = client.GetStream();
