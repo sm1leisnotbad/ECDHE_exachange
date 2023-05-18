@@ -108,7 +108,7 @@ namespace client_server
             // this feature will be available in server
         /* void server_side()
          {
-             changeCurvebyName("secp256k1");
+             changeCurvebyName("secp256k1"); 
              ListenToClient();
 
              generatingKeypair();

@@ -87,7 +87,7 @@ namespace client_server
             Console.WriteLine("Calculating share key completed!!!");
             Console.Write("Share key: " + BitConverter.ToString(sharekey).Replace("-", String.Empty));
             Console.WriteLine("");
-        }
+        } 
         /// <summary>
         /// currently only one curve - secp256k1, will add more curve later
         /// </summary>
