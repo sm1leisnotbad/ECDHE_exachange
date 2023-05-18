@@ -89,6 +89,7 @@ namespace client_server
         void client_side()
         {
             changeCurvebyName("secp256k1");
+            ConnectToServer();
             generatingKeypair();
             sendPublicKey();
             getOtherPublicKey();
@@ -98,6 +99,8 @@ namespace client_server
         void server_side()
         {
             changeCurvebyName("secp256k1");
+            ListenToClient();
+
             generatingKeypair();
             getOtherPublicKey();
             sendPublicKey();
