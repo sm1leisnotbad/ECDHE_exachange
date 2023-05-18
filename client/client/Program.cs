@@ -14,6 +14,10 @@ using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Math.EC;
 using System.Diagnostics;
 
+
+/// this project belongs to d4rkn19ht/ sm1l3isnotbad
+/// 
+
 namespace client_server
 {
 
@@ -130,21 +134,23 @@ namespace client_server
 
         void ConnectToServer()
         {
-            /// this will ad when testing on ngrok
+            /// this will add when testing on ngrok
             /// 
             /*
+            Console.WriteLine("Attemp to connecting to server!");
+            
             string servername = "";
             Console.Write("Enter URL of host: ");
             servername = Console.ReadLine();
             var address = Dns.GetHostAddresses(servername);
             Debug.Assert(address.Length > 0);
-            var enpoint = new IPEndPoint(address[0], 8080);
+            var enpoint = new IPEndPoint(address[0], 10312);
 
             server = new TcpClient();
 
             server.Connect(enpoint);
+            
             */
-            Console.WriteLine("Attemp to connecting to server!");
 
             server = new TcpClient("localhost", 8080);
         }
