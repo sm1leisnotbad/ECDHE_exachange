@@ -29,7 +29,7 @@ namespace client_server
 
         ECDomainParameters curve;
         AsymmetricCipherKeyPair ecc_keypair;
-        ECPublicKeyParameters ecc_pubkey;
+        ECPublicKeyParameters ecc_pubkey; 
         ECPrivateKeyParameters ecc_privatekey;
 
         byte[] buffer;
@@ -73,6 +73,9 @@ namespace client_server
             networkStream = client.GetStream();
             bytesRead = client.ReceiveBufferSize;
             buffer = new byte[bytesRead];
+
+            int len = networkStream.Read(buffer, 0, bytesRead);
+            Console.WriteLine(len);
             ECPoint point = ecc_pubkey.Parameters.Curve.DecodePoint(buffer);
             ECPublicKeyParameters otherPublicKey = new ECPublicKeyParameters(point, curve);
 
@@ -103,8 +106,8 @@ namespace client_server
          {
              changeCurvebyName("secp256k1");
              ListenToClient();
-
              generatingKeypair();
+             
              getOtherPublicKey();
              sendPublicKey();
          }
@@ -121,7 +124,7 @@ namespace client_server
         void ListenToClient()
         {
             IPAddress address = IPAddress.Parse("127.0.0.1");
-            listener = new TcpListener(address, 8000);
+            listener = new TcpListener(address, 8080);
             Console.WriteLine("Waiting for connection...");
             listener.Start();
             client = listener.AcceptTcpClient();

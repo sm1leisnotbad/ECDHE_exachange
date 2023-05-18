@@ -73,6 +73,8 @@ namespace client_server
             networkStream = server.GetStream();
             bytesRead = server.ReceiveBufferSize;
             buffer = new byte[bytesRead];
+            int len = networkStream.Read(buffer, 0, bytesRead);
+
             ECPoint point = ecc_pubkey.Parameters.Curve.DecodePoint(buffer);
             ECPublicKeyParameters otherPublicKey = new ECPublicKeyParameters(point, curve);
 
