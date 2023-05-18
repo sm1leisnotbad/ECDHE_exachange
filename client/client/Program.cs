@@ -131,12 +131,26 @@ namespace client_server
             Console.WriteLine(msg);
 
         }
+
+        string byte_to_hex(byte[] ok)
+        {
+            return BitConverter.ToString(ok).Replace("-", string.Empty);
+        }
+
         void Encrypt_and_send(string msg)
         {
             byte[] iv = new byte[16];
             SecureRandom random = new SecureRandom();
             random.NextBytes(iv);
             byte[] enc = encrypt_msg(key, iv, msg);
+
+            ///test
+            ///
+            /*
+            Console.WriteLine("IV: " + byte_to_hex(iv));
+            Console.WriteLine("Enc: " + byte_to_hex(enc));
+            */
+
             byte[] ok = new byte[16 + enc.Length];
             Buffer.BlockCopy(iv, 0, ok, 0, 16);
             Buffer.BlockCopy(enc, 0, ok, 16, enc.Length);
@@ -239,7 +253,7 @@ namespace client_server
             int len = networkStream.Read(buf, 0, 1024);
             byte[] ok = new byte[len];
             Buffer.BlockCopy(buf, 0, ok, 0, len);
-            return buf;
+            return ok;
         }
         /*
         byte[] ReceiveAll()

@@ -38,7 +38,7 @@ namespace client_server
         string message;
         int bytesRead;
         int messageSize;
-        byte[] key;
+        byte[] key = new byte[16];
 
         void changeCurvebyName(string name)
         {
@@ -126,12 +126,25 @@ namespace client_server
             return Encoding.UTF8.GetString(decryptedBytes);
 
         }
+        string byte_to_hex(byte[] ok)
+        {
+            return BitConverter.ToString(ok).Replace("-", string.Empty);
+        }
+
 
         void Decrypt_and_show(byte[] ok)
         {
             byte[] iv = new byte[16];
             Buffer.BlockCopy(ok, 0, iv, 0, 16);
             byte[] enc = new byte[ok.Length - 16];
+
+            ///Test
+            ///
+            /*
+            Console.WriteLine("IV: " + byte_to_hex(iv));
+            Console.Write("Enc: " + byte_to_hex(enc));
+            */
+
             Buffer.BlockCopy(ok, 16, enc, 0, ok.Length - 16);
             string msg = decrypt_msg(key, iv, enc);
 
@@ -151,6 +164,7 @@ namespace client_server
             SendStream(ok);
         }
 
+
         void server_side()
         {
             Console.WriteLine("##########################################");
@@ -166,11 +180,26 @@ namespace client_server
             getOtherPublicKey();
             sendPublicKey();
 
+
+            
             Console.WriteLine("-------- Begin your message here! ---------");
+            string msg = "";
             while (true)
             {
+                
 
+                byte[] ok = ReadStream();
+                Decrypt_and_show(ok);
+
+                Console.Write("Your message: ");
+                msg = Console.ReadLine().TrimEnd();
+                Encrypt_and_send(msg);
             }
+            
+            ///test section
+           /// byte[] enc = Encrypt_and_send("hello world");
+          ///  Decrypt_and_show(enc);
+            ///Console.WriteLine(ans);
         }
 
         static void Main(string[] args)
@@ -184,8 +213,8 @@ namespace client_server
         
         void ListenToClient()
         {
-            IPAddress address = IPAddress.Parse("127.0.0.1");
-            listener = new TcpListener(address, 8080);
+            ///IPAddress address = IPAddress.Parse("127.0.0.1");
+            listener = new TcpListener(IPAddress.Any, 8080);
             Console.WriteLine("Waiting for connection...");
             listener.Start();
             client = listener.AcceptTcpClient();
@@ -221,11 +250,12 @@ namespace client_server
         byte[] ReadStream()
         {
             byte[] buf = new byte[1024];
+            
             networkStream = client.GetStream();
             int len = networkStream.Read(buf, 0, 1024);
             byte[] ok = new byte[len];
             Buffer.BlockCopy(buf, 0, ok, 0, len);
-            return buf;
+            return ok;
         }
         /*
         byte[] ReceiveAll()
