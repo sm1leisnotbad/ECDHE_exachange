@@ -148,7 +148,7 @@ namespace client_server
             byte[] ok = new byte[16 + enc.Length];
             Buffer.BlockCopy(iv, 0, ok, 0, 16);
             Buffer.BlockCopy(enc, 0, ok, 16, enc.Length);
-
+            SendStream(ok);
         }
 
         void server_side()
