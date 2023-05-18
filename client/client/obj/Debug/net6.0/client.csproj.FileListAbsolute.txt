@@ -1,0 +1,17 @@
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client\client\bin\Debug\net6.0\client.exe
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client\client\bin\Debug\net6.0\client.deps.json
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client\client\bin\Debug\net6.0\client.runtimeconfig.json
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client\client\bin\Debug\net6.0\client.dll
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client\client\bin\Debug\net6.0\client.pdb
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client\client\bin\Debug\net6.0\BouncyCastle.Crypto.dll
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client\client\obj\Debug\net6.0\client.csproj.AssemblyReference.cache
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client\client\obj\Debug\net6.0\client.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client\client\obj\Debug\net6.0\client.AssemblyInfoInputs.cache
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client\client\obj\Debug\net6.0\client.AssemblyInfo.cs
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client\client\obj\Debug\net6.0\client.csproj.CoreCompileInputs.cache
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client\client\obj\Debug\net6.0\client.csproj.CopyComplete
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client\client\obj\Debug\net6.0\client.dll
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client\client\obj\Debug\net6.0\refint\client.dll
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client\client\obj\Debug\net6.0\client.pdb
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client\client\obj\Debug\net6.0\client.genruntimeconfig.cache
+C:\Users\tphat\OneDrive\Documents\GitHub\ECDHE_exachange\client\client\obj\Debug\net6.0\ref\client.dll

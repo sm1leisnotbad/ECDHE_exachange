@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "GCLHqa53vIU9mkRDbawGac6l7+OWL5/TWbrywjn7xyPWrsxmAk3e/r5cdz5YusCuv9xcLd1Smo5ERp7K2PKvLg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\tphat\\OneDrive\\Documents\\GitHub\\ECDHE_exachange\\client\\client\\client.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\tphat\\.nuget\\packages\\bouncycastle.netcore\\1.9.0\\bouncycastle.netcore.1.9.0.nupkg.sha512"
+  ],
+  "logs": []
+}
