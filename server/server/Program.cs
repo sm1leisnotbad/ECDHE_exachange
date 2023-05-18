@@ -120,7 +120,8 @@ namespace client_server
         
         void ListenToClient()
         {
-            listener = new TcpListener(IPAddress.Any, 8000);
+            IPAddress address = IPAddress.Parse("127.0.0.1");
+            listener = new TcpListener(address, 8000);
             Console.WriteLine("Waiting for connection...");
             listener.Start();
             client = listener.AcceptTcpClient();

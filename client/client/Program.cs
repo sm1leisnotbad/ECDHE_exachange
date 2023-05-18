@@ -139,6 +139,8 @@ namespace client_server
 
             server.Connect(enpoint);
             */
+            Console.WriteLine("Attemp to connecting to server!");
+
             server = new TcpClient("localhost", 8080);
         }
 
