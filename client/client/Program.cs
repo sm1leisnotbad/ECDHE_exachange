@@ -58,6 +58,7 @@ namespace client_server
             Console.WriteLine("Public Key");
             Console.WriteLine("X : " + ecc_pubkey.Q.XCoord.ToString());
             Console.WriteLine("Y : " + ecc_pubkey.Q.YCoord.ToString());
+            ///Console.WriteLine(ecc_pubkey.Q.GetEncoded().Length);
         }
 
         void sendPublicKey()
@@ -74,8 +75,10 @@ namespace client_server
             bytesRead = server.ReceiveBufferSize;
             buffer = new byte[bytesRead];
             int len = networkStream.Read(buffer, 0, bytesRead);
+            byte[] pub = new byte[len];
+            Buffer.BlockCopy(buffer, 0, pub, 0, len);
 
-            ECPoint point = ecc_pubkey.Parameters.Curve.DecodePoint(buffer);
+            ECPoint point = ecc_pubkey.Parameters.Curve.DecodePoint(pub);
             ECPublicKeyParameters otherPublicKey = new ECPublicKeyParameters(point, curve);
 
             IBasicAgreement ok = AgreementUtilities.GetBasicAgreement("ECDH");

@@ -75,8 +75,9 @@ namespace client_server
             buffer = new byte[bytesRead];
 
             int len = networkStream.Read(buffer, 0, bytesRead);
-            Console.WriteLine(len);
-            ECPoint point = ecc_pubkey.Parameters.Curve.DecodePoint(buffer);
+            byte[] pub = new byte[len];
+            Buffer.BlockCopy(buffer, 0, pub, 0, len);
+            ECPoint point = ecc_pubkey.Parameters.Curve.DecodePoint(pub);
             ECPublicKeyParameters otherPublicKey = new ECPublicKeyParameters(point, curve);
 
             IBasicAgreement ok = AgreementUtilities.GetBasicAgreement("ECDH");
