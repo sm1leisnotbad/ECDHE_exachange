@@ -227,6 +227,7 @@ namespace client_server
             Buffer.BlockCopy(buf, 0, ok, 0, len);
             return buf;
         }
+        /*
         byte[] ReceiveAll()
         {
             networkStream = client.GetStream();
@@ -250,5 +251,6 @@ namespace client_server
             }
             return recv;
         }
+        */
     }
 }

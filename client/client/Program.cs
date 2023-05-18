@@ -41,7 +41,7 @@ namespace client_server
         string message;
         int bytesRead;
         int messageSize;
-
+        byte[] key = new byte[16];
         void changeCurvebyName(string name)
         {
             X9ECParameters parameter = SecNamedCurves.GetByName(name);
@@ -92,17 +92,84 @@ namespace client_server
             Console.WriteLine("Calculating share key completed!!!");
             Console.Write("Share key: " + BitConverter.ToString(sharekey).Replace("-", String.Empty));
             Console.WriteLine("");
+            Buffer.BlockCopy(finalKey, 0, key, 0, 16);
         }
         /// <summary>
         /// currently only one curve - secp256k1, will add more curve later
         /// </summary>
+        /// 
+        static byte[] encrypt_msg(byte[] KEY, byte[] IV, string msg)
+        {
+            IBufferedCipher cipher = CipherUtilities.GetCipher("AES/CBC/PKCS7");
+            ParametersWithIV parameters = new ParametersWithIV(new KeyParameter(KEY), IV);
+            cipher.Init(true, parameters);
+
+            byte[] plaintext = Encoding.UTF8.GetBytes(msg);
+            return cipher.DoFinal(plaintext);
+        }
+
+        static string decrypt_msg(byte[] KEY, byte[] IV, byte[] enc)
+        {
+            IBufferedCipher cipher = CipherUtilities.GetCipher("AES/CBC/PKCS7");
+            ParametersWithIV parameters = new ParametersWithIV(new KeyParameter(KEY), IV);
+            cipher.Init(false, parameters);
+
+            byte[] decryptedBytes = cipher.DoFinal(enc);
+            return Encoding.UTF8.GetString(decryptedBytes);
+
+        }
+
+        void Decrypt_and_show(byte[] ok)
+        {
+            byte[] iv = new byte[16];
+            Buffer.BlockCopy(ok, 0, iv, 0, 16);
+            byte[] enc = new byte[ok.Length - 16];
+            Buffer.BlockCopy(ok, 16, enc, 0, ok.Length - 16);
+            string msg = decrypt_msg(key, iv, enc);
+
+            Console.Write("Server: ");
+            Console.WriteLine(msg);
+
+        }
+        void Encrypt_and_send(string msg)
+        {
+            byte[] iv = new byte[16];
+            SecureRandom random = new SecureRandom();
+            random.NextBytes(iv);
+            byte[] enc = encrypt_msg(key, iv, msg);
+            byte[] ok = new byte[16 + enc.Length];
+            Buffer.BlockCopy(iv, 0, ok, 0, 16);
+            Buffer.BlockCopy(enc, 0, ok, 16, enc.Length);
+            SendStream(ok);
+        }
+
         void client_side()
         {
+
+            Console.WriteLine("##########################################");
+            Console.WriteLine("#                                        #");
+            Console.WriteLine("#                 CLIENT                 #");
+            Console.WriteLine("#                                        #");
+            Console.WriteLine("##########################################");
+
             changeCurvebyName("secp256k1");
             ConnectToServer();
             generatingKeypair();
             sendPublicKey();
             getOtherPublicKey();
+            string msg = "";
+
+            Console.WriteLine("--------  Begin your message here!  --------");
+            while (true)
+            {
+                Console.Write("Your message: ");
+                msg = Console.ReadLine().TrimEnd();
+                Encrypt_and_send(msg);
+
+                byte[] ok = ReadStream();
+                Decrypt_and_show(ok);
+
+            }
         }
 
             // this feature will be available in server
@@ -155,15 +222,26 @@ namespace client_server
             server = new TcpClient("localhost", 8080);
         }
 
-        void SendMessage(string message)
+        void SendStream(byte[] msg)
         {
 
-            buffer = Encoding.ASCII.GetBytes(message);
             networkStream = server.GetStream();
-            networkStream.Write(buffer, 0, buffer.Length);
+            networkStream.Write(msg, 0, msg.Length);
             networkStream.Flush();
         }
 
+
+
+        byte[] ReadStream()
+        {
+            byte[] buf = new byte[1024];
+            networkStream = server.GetStream();
+            int len = networkStream.Read(buf, 0, 1024);
+            byte[] ok = new byte[len];
+            Buffer.BlockCopy(buf, 0, ok, 0, len);
+            return buf;
+        }
+        /*
         byte[] ReceiveAll()
         {
             networkStream = server.GetStream();
@@ -187,5 +265,6 @@ namespace client_server
             }
             return recv;
         }
+        */
     }
 }
