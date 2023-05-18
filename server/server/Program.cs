@@ -128,7 +128,15 @@ namespace client_server
         }
 
         void Decrypt_and_show(byte[] ok)
-        { 
+        {
+            byte[] iv = new byte[16];
+            Buffer.BlockCopy(ok, 0, iv, 0, 16);
+            byte[] enc = new byte[ok.Length - 16];
+            Buffer.BlockCopy(ok, 16, enc, 0, ok.Length - 16);
+            string msg = decrypt_msg(key, iv, enc);
+
+            Console.Write("Client: ");
+            Console.WriteLine(msg);
 
         }
         void Encrypt_and_send(string msg)
@@ -145,12 +153,24 @@ namespace client_server
 
         void server_side()
         {
+            Console.WriteLine("##########################################");
+            Console.WriteLine("#                                        #");
+            Console.WriteLine("#                 SERVER                 #");
+            Console.WriteLine("#                                        #");
+            Console.WriteLine("##########################################");
+
             changeCurvebyName("secp256k1");
             ListenToClient();
             generatingKeypair();
              
             getOtherPublicKey();
             sendPublicKey();
+
+            Console.WriteLine("-------- Begin your message here! ---------");
+            while (true)
+            {
+
+            }
         }
 
         static void Main(string[] args)
