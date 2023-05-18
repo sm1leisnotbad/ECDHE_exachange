@@ -172,7 +172,7 @@ namespace client_server
             Console.WriteLine("#                 SERVER                 #");
             Console.WriteLine("#                                        #");
             Console.WriteLine("##########################################");
-
+             
             changeCurvebyName("secp256k1");
             ListenToClient();
             generatingKeypair();

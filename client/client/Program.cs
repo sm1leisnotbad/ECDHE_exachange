@@ -228,7 +228,7 @@ namespace client_server
             var enpoint = new IPEndPoint(address[0], 10312);
 
             server = new TcpClient();
-
+             
             server.Connect(enpoint);
             
             */
